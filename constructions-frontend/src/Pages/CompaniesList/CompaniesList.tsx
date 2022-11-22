@@ -1,15 +1,26 @@
-import { ConstructionCompaniesTable } from "../Components/ConstructionCompaniesTable";
+import { ConstructionCompaniesTable } from "../../Components/ConstructionCompaniesTable";
 import { ChangeEvent, useEffect, useState } from "react";
-import { ConstructionCompany } from "../Models/ConstructionCompany";
+import { ConstructionCompany } from "../../Models/ConstructionCompany";
 import {
   Checkbox,
   Container,
+  FormControl,
   FormControlLabel,
   Paper,
   TextField,
 } from "@mui/material";
+import { ConstructionSpecialitiesServiceApi } from "../../Services/ConstructionSpecialitiesService.api";
+import { ConstructionCompaniesServiceApi } from "../../Services/ConstructionCompaniesService.api";
 
-export const CompaniesList = () => {
+type CompaniesListProps = {
+  constructionCompaniesServiceApi: ConstructionCompaniesServiceApi;
+  constructionSpecialitiesServiceApi: ConstructionSpecialitiesServiceApi;
+};
+
+export const CompaniesList = ({
+  constructionCompaniesServiceApi,
+  constructionSpecialitiesServiceApi,
+}: CompaniesListProps) => {
   const [companies, setCompanies] = useState<ConstructionCompany[]>([]);
   const [search, setSearch] = useState("");
   const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>(
@@ -18,13 +29,15 @@ export const CompaniesList = () => {
   const [specialities, setSpecialities] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/v1/construction-companies")
-      .then((response) => response.json())
-      .then((companies) => setCompanies(companies));
+    constructionCompaniesServiceApi.getCompanies().then((companies) => {
+      setCompanies(companies);
+    });
 
-    fetch("http://localhost:3001/api/v1/construction-specialities")
-      .then((response) => response.json())
-      .then((companies) => setSpecialities(companies));
+    constructionSpecialitiesServiceApi
+      .getSpecialities()
+      .then((specialities) => {
+        setSpecialities(specialities);
+      });
   }, []);
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -43,28 +56,22 @@ export const CompaniesList = () => {
   };
 
   useEffect(() => {
-    const query = new URLSearchParams();
-    if (search) {
-      query.append("search", search);
-    }
-    if (selectedSpecialities.length > 0) {
-      query.append("specialities", selectedSpecialities.join(","));
-    }
-    fetch(
-      `http://localhost:3001/api/v1/construction-companies?${query.toString()}`
-    )
-      .then((response) => response.json())
+    constructionCompaniesServiceApi
+      .getCompanies({ search, specialities: selectedSpecialities })
       .then((companies) => setCompanies(companies));
   }, [selectedSpecialities, search]);
 
   return (
     <Container maxWidth="md">
-      <TextField
-        value={search}
-        onChange={handleSearch}
-        label="Search Companies..."
-        variant="outlined"
-      />
+      <FormControl fullWidth>
+        <TextField
+          value={search}
+          onChange={handleSearch}
+          label="Search Companies..."
+          variant="outlined"
+        />
+      </FormControl>
+
       {specialities.map((speciality) => (
         <FormControlLabel
           key={speciality}

@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { ConstructionCompany } from "../Models/ConstructionCompany";
+import { ConstructionCompany } from "../../Models/ConstructionCompany";
 
 type ConstructionCompaniesListProps = {
   companies: ConstructionCompany[];
@@ -22,10 +22,12 @@ export const ConstructionCompaniesTable = ({
       <Table sx={{ minWidth: 650 }} aria-label="simple table" stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell align="right">Company Name</TableCell>
-            <TableCell align="right">Logo</TableCell>
-            <TableCell align="right">Specialities</TableCell>
-            <TableCell align="right">City</TableCell>
+            <TableCell width="20%">Company Name</TableCell>
+            <TableCell width="15%" align="center">
+              Logo
+            </TableCell>
+            <TableCell width="45%">Specialities</TableCell>
+            <TableCell width="20%">City</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -34,16 +36,16 @@ export const ConstructionCompaniesTable = ({
               key={company.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell align="right">{company.name}</TableCell>
-              <TableCell align="right">
+              <TableCell>{company.name}</TableCell>
+              <TableCell align="center">
                 <img src={company.logo} alt={`${company.name} Logo`} />
               </TableCell>
-              <TableCell align="right">
+              <TableCell>
                 {company.speciality.map((speciality, index) => (
                   <Chip key={index} sx={{ margin: "5px" }} label={speciality} />
                 ))}
               </TableCell>
-              <TableCell align="right">{company.city}</TableCell>
+              <TableCell>{company.city}</TableCell>
             </TableRow>
           ))}
         </TableBody>

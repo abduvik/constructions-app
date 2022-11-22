@@ -1,9 +1,15 @@
-import React from 'react';
-import {CompaniesList} from "./Pages/CompaniesList";
+import React from "react";
+import CompaniesList from "./Pages/CompaniesList";
+import { Header } from "./Components/Header";
+
+import "./styles/global.scss";
 
 function App() {
   return (
-    <CompaniesList />
+    <>
+      <Header />
+      <CompaniesList />
+    </>
   );
 }
 
