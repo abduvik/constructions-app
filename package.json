@@ -1,0 +1,18 @@
+{
+  "name": "constructions-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:frontend": "npm start -workspace=constructions-frontend",
+    "start:backend": "npm start -workspace=constructions-backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abduvik/constructions-app.git"
+  },
+  "workspaces": ["constructions-backend", "constructions-frontend"],
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
