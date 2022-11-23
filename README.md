@@ -1,5 +1,9 @@
 # Constructions App
 
+## Requirements
+
+- Node.js v16.14.0
+
 ## Commands
 
 - `npm install`: install all dependencies in the monorepo
