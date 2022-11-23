@@ -11,7 +11,7 @@ export const withDependencies: DependencyInjector = (
   Component
 ) => {
   const resolvedDependencies: any = {};
-  Object.keys(dependencies).forEach((prop) => {
+  Object.keys(dependencies).forEach((prop: any) => {
     const dependencyKey = dependencies[prop];
     resolvedDependencies[prop] = container.get(dependencyKey);
   });

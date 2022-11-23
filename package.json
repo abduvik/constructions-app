@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "npm start -workspace=constructions-frontend",
     "start:backend": "npm start -workspace=constructions-backend"
   },
@@ -11,8 +12,14 @@
     "type": "git",
     "url": "git+https://github.com/abduvik/constructions-app.git"
   },
-  "workspaces": ["constructions-backend", "constructions-frontend"],
+  "workspaces": [
+    "constructions-backend",
+    "constructions-frontend"
+  ],
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }

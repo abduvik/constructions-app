@@ -1,90 +1,38 @@
-import { ConstructionCompaniesTable } from "../../Components/ConstructionCompaniesTable";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Container, Paper } from "@mui/material";
 import { ConstructionCompany } from "../../Models/ConstructionCompany";
-import {
-  Checkbox,
-  Container,
-  FormControl,
-  FormControlLabel,
-  Paper,
-  TextField,
-} from "@mui/material";
-import { ConstructionSpecialitiesServiceApi } from "../../Services/ConstructionSpecialitiesService.api";
+import { ConstructionCompaniesTable } from "../../Components/ConstructionCompaniesTable";
 import { ConstructionCompaniesServiceApi } from "../../Services/ConstructionCompaniesService.api";
+import { CompaniesFilter } from "./CompaniesFilter";
+import { onFilterChangeEvent } from "./CompaniesFilter/CompaniesFilter";
 
 type CompaniesListProps = {
   constructionCompaniesServiceApi: ConstructionCompaniesServiceApi;
-  constructionSpecialitiesServiceApi: ConstructionSpecialitiesServiceApi;
 };
 
 export const CompaniesList = ({
   constructionCompaniesServiceApi,
-  constructionSpecialitiesServiceApi,
 }: CompaniesListProps) => {
   const [companies, setCompanies] = useState<ConstructionCompany[]>([]);
-  const [search, setSearch] = useState("");
-  const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>(
-    []
-  );
-  const [specialities, setSpecialities] = useState<string[]>([]);
 
   useEffect(() => {
     constructionCompaniesServiceApi.getCompanies().then((companies) => {
       setCompanies(companies);
     });
-
-    constructionSpecialitiesServiceApi
-      .getSpecialities()
-      .then((specialities) => {
-        setSpecialities(specialities);
-      });
   }, []);
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
-
-  const handleSpecialityChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { checked, value } = event.target;
-    if (checked) {
-      setSelectedSpecialities([...selectedSpecialities, value]);
-    } else {
-      setSelectedSpecialities(
-        selectedSpecialities.filter((speciality) => speciality !== value)
-      );
-    }
-  };
-
-  useEffect(() => {
+  const handleFilterChange: onFilterChangeEvent = ({
+    selectedSpecialities,
+    search,
+  }) => {
     constructionCompaniesServiceApi
       .getCompanies({ search, specialities: selectedSpecialities })
       .then((companies) => setCompanies(companies));
-  }, [selectedSpecialities, search]);
+  };
 
   return (
     <Container maxWidth="md">
-      <FormControl fullWidth>
-        <TextField
-          value={search}
-          onChange={handleSearch}
-          label="Search Companies..."
-          variant="outlined"
-        />
-      </FormControl>
-
-      {specialities.map((speciality) => (
-        <FormControlLabel
-          key={speciality}
-          control={
-            <Checkbox
-              value={speciality}
-              checked={selectedSpecialities.includes(speciality)}
-              onChange={handleSpecialityChange}
-            />
-          }
-          label={speciality}
-        />
-      ))}
+      <CompaniesFilter onFilterChange={handleFilterChange} />
       <Paper elevation={1}>
         <ConstructionCompaniesTable companies={companies} />
       </Paper>
